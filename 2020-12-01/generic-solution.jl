@@ -15,7 +15,9 @@ function calc_parts(total::Int, count::Int, items::Vector{Int})::Union{LinkedLis
 	rest = Vector{Int}(undef, length(items)-1)
 	for i in eachindex(items)
 		rem = total - items[i]
-		copyskipping!(rest, items, i) # could be made more efficient with a boolean mask
+		copyskipping!(rest, items, i)
+		fitting = filter(item -> item <= rem, rest)
+		# IDEA: could be made more space-, and potentially time-, efficient with a boolean mask
 		part = calc_parts(rem, count-1, rest)
 		if ! isnothing(part)
 			return cons(items[i], part)
