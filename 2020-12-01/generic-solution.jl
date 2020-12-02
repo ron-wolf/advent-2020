@@ -1,4 +1,4 @@
-using DataStructures: LinkedList
+using DataStructures: LinkedList, list, cons
 
 function copyskipping!(dest::Vector{T}, src::Vector{T}, skip::Integer) where {N, T}
 	@assert skip in eachindex(src) "You can only skip an index that is in-bounds"
@@ -7,11 +7,12 @@ function copyskipping!(dest::Vector{T}, src::Vector{T}, skip::Integer) where {N,
 end
 
 function calc_parts(total::Int, count::Int, items::Vector{Int})::Union{LinkedList{Int}, Nothing}
-	if count == 0
-		return (total == 0) ? list() : nothing
-	elseif count == 1
-		return (total in items) ? list(total) : nothing
+	if count < 2
+		return (count == 0 && total == 0)     ? list()
+		     : (count == 1 && total in items) ? list(total)
+		     :                                  nothing
 	end
+	# TODO: add logic for count == 2 that runs through the array from both ends
 	
 	rest = Vector{Int}(undef, length(items)-1)
 	for i in eachindex(items)
