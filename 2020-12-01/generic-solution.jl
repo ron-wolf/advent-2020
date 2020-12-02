@@ -1,6 +1,7 @@
 using DataStructures: LinkedList
 
 function copyskipping!(dest::Vector{T}, src::Vector{T}, skip::Integer) where {N, T}
+	@assert skip in eachindex(src) "You can only skip an index that is in-bounds"
 	copyto!(dest, 1, src, 1, skip-1)
 	copyto!(dest, skip, src, skip+1, length(src)-skip)
 end
@@ -14,11 +15,11 @@ function calc_parts(total::Int, count::Int, items::Vector{Int})::Union{LinkedLis
 	
 	rest = Vector{Int}(undef, length(items)-1)
 	for i in eachindex(items)
-		rem = total - items[i]
-		copyskipping!(rest, items, i)
-		fitting = filter(item -> item <= rem, rest)
-		# IDEA: could be made more space-, and potentially time-, efficient with a boolean mask
-		part = calc_parts(rem, count-1, rest)
+		remainder = total - items[i]
+		if remainder < 0 continue end
+		copyskipping!(rest, items, i) # TODO: remove this item from items permanently
+		part = calc_parts(remainder, count-1, rest) # TODO: split this off as a separate Task, or have it add to a Channel
+		# IDK: how do you notify all the Tasks associated with a Channel to stop?
 		if ! isnothing(part)
 			return cons(items[i], part)
 		end
