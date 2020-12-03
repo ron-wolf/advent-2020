@@ -1,6 +1,6 @@
 total = 0
 
-for line in eachline("puzzle-1-input.txt")
+for line in eachline("input.txt")
 	parts = split(line; limit=3)
 	
 	ixs = parse.(Int, split(parts[1], "-"))

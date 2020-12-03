@@ -1,6 +1,6 @@
 using DelimitedFiles: readdlm
 
-expenses = readdlm("puzzle-1-input.txt", Int)
+expenses = readdlm("input.txt", Int)
 remainders = 2020 .- expenses # numbers that could be added to an expense to get 2020
 for rem in remainders # one such number
 	complements = rem .- expenses # numbers that could be added to an expense to get rem

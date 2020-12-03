@@ -1,4 +1,4 @@
-rows = (collect(line) .== '#' for line in eachline("puzzle-1-input.txt"))
+rows = (collect(line) .== '#' for line in eachline("input.txt"))
 matrix = transpose(hcat(rows...))
 
 pos = [1, 1]

@@ -1,4 +1,4 @@
-rows = (collect(line) .== '#' for line in eachline("puzzle-1-input.txt"))
+rows = (collect(line) .== '#' for line in eachline("input.txt"))
 matrix = transpose(hcat(rows...))
 
 slopes = [[1, 1], [1, 3], [1, 5], [1, 7], [2, 1]]
