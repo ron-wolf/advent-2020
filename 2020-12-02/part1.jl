@@ -1,6 +1,7 @@
 total = 0
 
-for line in eachline("input.txt")
+inputfile = joinpath(@__DIR__, "input.txt")
+for line in eachline(inputfile)
 	parts = split(line; limit=3)
 	
 	limits = UnitRange( parse.(Int, split(parts[1], "-"))... )

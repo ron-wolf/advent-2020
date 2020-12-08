@@ -1,4 +1,5 @@
-rows = (collect(line) .== '#' for line in eachline("input.txt"))
+inputfile = joinpath(@__DIR__, "input.txt")
+rows = (collect(line) .== '#' for line in eachline(inputfile))
 matrix = transpose(hcat(rows...))
 
 pos = [1, 1]

@@ -1,6 +1,7 @@
 using DelimitedFiles: readdlm
 
-expenses = readdlm("input.txt", Int)
+inputfile = joinpath(@__DIR__, "input.txt")
+expenses = vec(readdlm(inputfile, Int))
 remainders = 2020 .- expenses # numbers that could be added to an expense to get 2020
 for rem in remainders # one such number
 	complements = rem .- expenses # numbers that could be added to an expense to get rem

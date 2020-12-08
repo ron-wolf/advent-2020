@@ -1,4 +1,5 @@
-rows = (collect(line) .== '#' for line in eachline("input.txt"))
+inputfile = joinpath(@__DIR__, "input.txt")
+rows = (collect(line) .== '#' for line in eachline(inputfile))
 matrix = transpose(hcat(rows...))
 
 slopes = [[1, 1], [1, 3], [1, 5], [1, 7], [2, 1]]
