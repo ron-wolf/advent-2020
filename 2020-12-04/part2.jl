@@ -7,7 +7,7 @@ module Fields # global constants
 	
 	const count = 8
 	const names = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"] # ::Vector{String}
-	const required = [true, true, true, true, true, true, true, false] # ::BitVector
+	const optional = [false, false, false, false, false, false, false, true] # ::BitVector
 	const validators = [ # ::Vector{Function}
 		byr -> occursin(r"^\d+$", byr) && parse(Int, byr) in 1920:2002,
 		iyr -> occursin(r"^\d+$", iyr) && parse(Int, iyr) in 2010:2020,
@@ -29,17 +29,9 @@ module Fields # global constants
 	]
 end
 
-valid_count = 0
-
-inputfile = joinpath(@__DIR__, "input.txt")
-open(inputfile) do input
-	
-values = Vector{Union{Missing,String}}(missing, Fields.count)
-while ! eof(input)
-	passport = readuntil(input, "\n\n") # TODO: will this ever advance past \n\n?
-	skipchars(isequal('\n'), input)
-	
-	for field in split(passport, [' ', '\n'])
+function is_valid_passport(p::String)
+	values = Vector{Union{Missing,String}}(missing, Fields.count)
+	for field in split(p, [' ', '\n'])
 		parts = split(field, ':'; limit=2)
 		length(parts) < 2 && continue
 		
@@ -50,15 +42,20 @@ while ! eof(input)
 		values[i] = val
 	end
 	
-	valid = all(enumerate(values)) do (i, val)
-		ismissing(val) ? Fields.required[i] : Fields.validators[i](val)
+	return all(enumerate(values)) do (i, val)
+		ismissing(val) ? Fields.optional[i] : Fields.validators[i](val)
 	end
-	if valid
-		global valid_count += 1
-	end
-	fill!(values, missing)
 end
 
+valid_count = 0
+
+inputfile = joinpath(@__DIR__, "input.txt")
+open(inputfile) do input
+	while ! eof(input)
+		passport = readuntil(input, "\n\n")
+		global valid_count += is_valid_passport(passport)
+		skipchars(isequal('\n'), input)
+	end
 end
 
 println(valid_count)
